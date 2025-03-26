@@ -4,27 +4,30 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "language", schema = "movie")
 public class Language {
     @Id
-    @Column(name = "language_id", columnDefinition = "tinyint UNSIGNED not null")
-    private Short id;
+    @Column(name = "language_id")
+    private Byte id;
 
-    @Column(name = "name", nullable = false, length = 20)
+    @Column(name = "name", nullable = false, columnDefinition = "char")
     private String name;
 
     @Column(name = "last_update", nullable = false)
-    private Instant lastUpdate;
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
 
-    public Short getId() {
+    public Byte getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Byte id) {
         this.id = id;
     }
 
@@ -36,11 +39,11 @@ public class Language {
         this.name = name;
     }
 
-    public Instant getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Instant lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 

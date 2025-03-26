@@ -1,9 +1,15 @@
 package entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.Year;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "film", schema = "movie", indexes = {
@@ -13,57 +19,65 @@ import java.time.Instant;
 })
 public class Film {
     @Id
-    @Column(name = "film_id", columnDefinition = "smallint UNSIGNED not null")
-    private Integer id;
+    @Column(name = "film_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Short id;
 
     @Column(name = "title", nullable = false, length = 128)
     private String title;
 
-    @Lob
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "text")
+    @Type(type = "text")
     private String description;
 
-    @Column(name = "release_year")
-    private Integer releaseYear;
+    @Column(name = "release_year", columnDefinition = "year")
+    private Year releaseYear;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "language_id", nullable = false)
-    private entity.Language language;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "language_id")
+    private Language language;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "original_language_id")
-    private entity.Language originalLanguage;
+    private Language originalLanguage;
 
-    @Column(name = "rental_duration", columnDefinition = "tinyint UNSIGNED not null")
-    private Short rentalDuration;
+    @Column(name = "rental_duration")
+    private Byte rentalDuration;
 
     @Column(name = "rental_rate", nullable = false, precision = 4, scale = 2)
     private BigDecimal rentalRate;
 
-    @Column(name = "length", columnDefinition = "smallint UNSIGNED")
-    private Integer length;
+    @Column(name = "length")
+    private Short length;
 
     @Column(name = "replacement_cost", nullable = false, precision = 5, scale = 2)
     private BigDecimal replacementCost;
 
-    @Lob
-    @Column(name = "rating")
-    private String rating;
+    @Column(name = "rating", columnDefinition = "enum('G', 'PG', 'PG-13', 'R', 'NC-17')")
+    private Rating rating;
 
-    @Lob
-    @Column(name = "special_features")
+    @Column(name = "special_features", columnDefinition = "set('Trailers', 'Commentaries', 'Deleted Scenes', 'Behind the Scenes')")
     private String specialFeatures;
 
     @Column(name = "last_update", nullable = false)
-    private Instant lastUpdate;
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
 
-    public Integer getId() {
-        return id;
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "film_category",
+            joinColumns = @JoinColumn(name = "film_id", referencedColumnName = "film_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+    )
+    private Set<Category> categories = new HashSet<>();
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "film_actor",
+            joinColumns = @JoinColumn(name = "film_id", referencedColumnName = "film_id"),
+            inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "actor_id")
+    )
+    private Set<Actor> actors = new HashSet<>();
 
     public String getTitle() {
         return title;
@@ -81,35 +95,35 @@ public class Film {
         this.description = description;
     }
 
-    public Integer getReleaseYear() {
+    public Year getReleaseYear() {
         return releaseYear;
     }
 
-    public void setReleaseYear(Integer releaseYear) {
+    public void setReleaseYear(Year releaseYear) {
         this.releaseYear = releaseYear;
     }
 
-    public entity.Language getLanguage() {
+    public Language getLanguage() {
         return language;
     }
 
-    public void setLanguage(entity.Language language) {
+    public void setLanguage(Language language) {
         this.language = language;
     }
 
-    public entity.Language getOriginalLanguage() {
+    public Language getOriginalLanguage() {
         return originalLanguage;
     }
 
-    public void setOriginalLanguage(entity.Language originalLanguage) {
+    public void setOriginalLanguage(Language originalLanguage) {
         this.originalLanguage = originalLanguage;
     }
 
-    public Short getRentalDuration() {
+    public Byte getRentalDuration() {
         return rentalDuration;
     }
 
-    public void setRentalDuration(Short rentalDuration) {
+    public void setRentalDuration(Byte rentalDuration) {
         this.rentalDuration = rentalDuration;
     }
 
@@ -121,11 +135,11 @@ public class Film {
         this.rentalRate = rentalRate;
     }
 
-    public Integer getLength() {
+    public Short getLength() {
         return length;
     }
 
-    public void setLength(Integer length) {
+    public void setLength(Short length) {
         this.length = length;
     }
 
@@ -137,12 +151,12 @@ public class Film {
         this.replacementCost = replacementCost;
     }
 
-    public String getRating() {
+    public Rating getRating() {
         return rating;
     }
 
     public void setRating(String rating) {
-        this.rating = rating;
+        this.rating = Rating.valueOf(rating);
     }
 
     public String getSpecialFeatures() {
@@ -153,11 +167,11 @@ public class Film {
         this.specialFeatures = specialFeatures;
     }
 
-    public Instant getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Instant lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 

@@ -1,8 +1,10 @@
 package entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "inventory", schema = "movie", indexes = {
@@ -12,6 +14,7 @@ import java.time.Instant;
 public class Inventory {
     @Id
     @Column(name = "inventory_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -20,10 +23,11 @@ public class Inventory {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "store_id", nullable = false)
-    private entity.Store store;
+    private Store store;
 
     @Column(name = "last_update", nullable = false)
-    private Instant lastUpdate;
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
 
     public Integer getId() {
         return id;
@@ -49,11 +53,11 @@ public class Inventory {
         this.store = store;
     }
 
-    public Instant getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Instant lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 

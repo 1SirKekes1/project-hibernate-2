@@ -1,6 +1,7 @@
 package entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "film_text", schema = "movie", indexes = {
@@ -14,9 +15,14 @@ public class FilmText {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Lob
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "text")
+    @Type(type = "text")
     private String description;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "film_id")
+    private Film film;
 
     public Short getId() {
         return id;

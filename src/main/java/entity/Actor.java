@@ -1,17 +1,22 @@
 package entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "actor", schema = "movie", indexes = {
         @Index(name = "idx_actor_last_name", columnList = "last_name")
 })
 public class Actor {
+
     @Id
-    @Column(name = "actor_id", columnDefinition = "smallint UNSIGNED not null")
-    private Integer id;
+    @Column(name = "actor_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Short id;
 
     @Column(name = "first_name", nullable = false, length = 45)
     private String firstName;
@@ -20,13 +25,17 @@ public class Actor {
     private String lastName;
 
     @Column(name = "last_update", nullable = false)
+    @UpdateTimestamp
     private Instant lastUpdate;
 
-    public Integer getId() {
+    @ManyToMany(mappedBy = "actors")
+    private Set<Film> films = new HashSet<>();
+
+    public Short getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Short id) {
         this.id = id;
     }
 

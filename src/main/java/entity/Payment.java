@@ -1,11 +1,14 @@
 package entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "payment", schema = "movie", indexes = {
@@ -14,8 +17,9 @@ import java.time.Instant;
 })
 public class Payment {
     @Id
-    @Column(name = "payment_id", columnDefinition = "smallint UNSIGNED not null")
-    private Integer id;
+    @Column(name = "payment_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Short id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
@@ -23,27 +27,28 @@ public class Payment {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "staff_id", nullable = false)
-    private entity.Staff staff;
+    private Staff staff;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rental_id")
-    private entity.Rental rental;
+    private Rental rental;
 
     @Column(name = "amount", nullable = false, precision = 5, scale = 2)
     private BigDecimal amount;
 
     @Column(name = "payment_date", nullable = false)
-    private Instant paymentDate;
+    @CreationTimestamp
+    private LocalDateTime paymentDate;
 
     @Column(name = "last_update")
-    private Instant lastUpdate;
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
 
-    public Integer getId() {
+    public Short getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Short id) {
         this.id = id;
     }
 
@@ -55,19 +60,19 @@ public class Payment {
         this.customer = customer;
     }
 
-    public entity.Staff getStaff() {
+    public Staff getStaff() {
         return staff;
     }
 
-    public void setStaff(entity.Staff staff) {
+    public void setStaff(Staff staff) {
         this.staff = staff;
     }
 
-    public entity.Rental getRental() {
+    public Rental getRental() {
         return rental;
     }
 
-    public void setRental(entity.Rental rental) {
+    public void setRental(Rental rental) {
         this.rental = rental;
     }
 
@@ -79,19 +84,19 @@ public class Payment {
         this.amount = amount;
     }
 
-    public Instant getPaymentDate() {
+    public LocalDateTime getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(Instant paymentDate) {
+    public void setPaymentDate(LocalDateTime paymentDate) {
         this.paymentDate = paymentDate;
     }
 
-    public Instant getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Instant lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 

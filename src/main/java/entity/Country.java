@@ -1,30 +1,31 @@
 package entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "country", schema = "movie")
 public class Country {
     @Id
-    @Column(name = "country_id", columnDefinition = "smallint UNSIGNED not null")
-    private Integer id;
+    @Column(name = "country_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Short id;
 
     @Column(name = "country", nullable = false, length = 50)
     private String country;
 
     @Column(name = "last_update", nullable = false)
-    private Instant lastUpdate;
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
 
-    public Integer getId() {
+    public Short getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Short id) {
         this.id = id;
     }
 
@@ -36,11 +37,11 @@ public class Country {
         this.country = country;
     }
 
-    public Instant getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Instant lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 

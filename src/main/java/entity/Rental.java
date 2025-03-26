@@ -1,8 +1,10 @@
 package entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "rental", schema = "movie", indexes = {
@@ -15,10 +17,11 @@ import java.time.Instant;
 public class Rental {
     @Id
     @Column(name = "rental_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "rental_date", nullable = false)
-    private Instant rentalDate;
+    private LocalDateTime rentalDate;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "inventory_id", nullable = false)
@@ -29,14 +32,15 @@ public class Rental {
     private Customer customer;
 
     @Column(name = "return_date")
-    private Instant returnDate;
+    private LocalDateTime returnDate;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "staff_id", nullable = false)
-    private entity.Staff staff;
+    private Staff staff;
 
     @Column(name = "last_update", nullable = false)
-    private Instant lastUpdate;
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
 
     public Integer getId() {
         return id;
@@ -46,11 +50,11 @@ public class Rental {
         this.id = id;
     }
 
-    public Instant getRentalDate() {
+    public LocalDateTime getRentalDate() {
         return rentalDate;
     }
 
-    public void setRentalDate(Instant rentalDate) {
+    public void setRentalDate(LocalDateTime rentalDate) {
         this.rentalDate = rentalDate;
     }
 
@@ -70,11 +74,11 @@ public class Rental {
         this.customer = customer;
     }
 
-    public Instant getReturnDate() {
+    public LocalDateTime getReturnDate() {
         return returnDate;
     }
 
-    public void setReturnDate(Instant returnDate) {
+    public void setReturnDate(LocalDateTime returnDate) {
         this.returnDate = returnDate;
     }
 
@@ -86,11 +90,11 @@ public class Rental {
         this.staff = staff;
     }
 
-    public Instant getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Instant lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 

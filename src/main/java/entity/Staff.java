@@ -1,8 +1,10 @@
 package entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "staff", schema = "movie", indexes = {
@@ -11,8 +13,9 @@ import java.time.Instant;
 })
 public class Staff {
     @Id
-    @Column(name = "staff_id", columnDefinition = "tinyint UNSIGNED not null")
-    private Short id;
+    @Column(name = "staff_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Byte id;
 
     @Column(name = "first_name", nullable = false, length = 45)
     private String firstName;
@@ -24,7 +27,8 @@ public class Staff {
     @JoinColumn(name = "address_id", nullable = false)
     private Address address;
 
-    @Column(name = "picture")
+    @Lob
+    @Column(name = "picture", columnDefinition = "BLOB")
     private byte[] picture;
 
     @Column(name = "email", length = 50)
@@ -32,7 +36,7 @@ public class Staff {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "store_id", nullable = false)
-    private entity.Store store;
+    private Store store;
 
     @Column(name = "active", nullable = false)
     private Boolean active = false;
@@ -44,13 +48,14 @@ public class Staff {
     private String password;
 
     @Column(name = "last_update", nullable = false)
-    private Instant lastUpdate;
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
 
-    public Short getId() {
+    public Byte getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Byte id) {
         this.id = id;
     }
 
@@ -94,11 +99,11 @@ public class Staff {
         this.email = email;
     }
 
-    public entity.Store getStore() {
+    public Store getStore() {
         return store;
     }
 
-    public void setStore(entity.Store store) {
+    public void setStore(Store store) {
         this.store = store;
     }
 
@@ -126,11 +131,11 @@ public class Staff {
         this.password = password;
     }
 
-    public Instant getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Instant lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 

@@ -1,8 +1,11 @@
 package entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "customer", schema = "movie", indexes = {
@@ -12,12 +15,13 @@ import java.time.Instant;
 })
 public class Customer {
     @Id
-    @Column(name = "customer_id", columnDefinition = "smallint UNSIGNED not null")
-    private Integer id;
+    @Column(name = "customer_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Short id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "store_id", nullable = false)
-    private entity.Store store;
+    private Store store;
 
     @Column(name = "first_name", nullable = false, length = 45)
     private String firstName;
@@ -28,7 +32,7 @@ public class Customer {
     @Column(name = "email", length = 50)
     private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "address_id", nullable = false)
     private Address address;
 
@@ -36,16 +40,18 @@ public class Customer {
     private Boolean active = false;
 
     @Column(name = "create_date", nullable = false)
-    private Instant createDate;
+    @CreationTimestamp
+    private LocalDateTime createDate;
 
     @Column(name = "last_update")
-    private Instant lastUpdate;
+    @UpdateTimestamp
+    private LocalDateTime lastUpdate;
 
-    public Integer getId() {
+    public Short getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Short id) {
         this.id = id;
     }
 
@@ -97,19 +103,19 @@ public class Customer {
         this.active = active;
     }
 
-    public Instant getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Instant createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 
-    public Instant getLastUpdate() {
+    public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Instant lastUpdate) {
+    public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 

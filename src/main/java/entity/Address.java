@@ -1,6 +1,7 @@
 package entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 
@@ -10,8 +11,9 @@ import java.time.Instant;
 })
 public class Address {
     @Id
-    @Column(name = "address_id", columnDefinition = "smallint UNSIGNED not null")
-    private Integer id;
+    @Column(name = "address_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Short id;
 
     @Column(name = "address", nullable = false, length = 50)
     private String address;
@@ -24,7 +26,7 @@ public class Address {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "city_id", nullable = false)
-    private entity.City city;
+    private City city;
 
     @Column(name = "postal_code", length = 10)
     private String postalCode;
@@ -33,13 +35,14 @@ public class Address {
     private String phone;
 
     @Column(name = "last_update", nullable = false)
+    @UpdateTimestamp
     private Instant lastUpdate;
 
-    public Integer getId() {
+    public Short getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Short id) {
         this.id = id;
     }
 
