@@ -38,7 +38,7 @@ public class Main {
         properties.put(Environment.DRIVER, "com.p6spy.engine.spy.P6SpyDriver");
         properties.put(Environment.URL, "jdbc:p6spy:mysql://localhost:3306/movie");
         properties.put(Environment.USER, "root");
-        properties.put(Environment.PASS, "my-secret-pw");
+        properties.put(Environment.PASS, "root");
         properties.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
         properties.put(Environment.HBM2DDL_AUTO, "validate");
 
