@@ -1,6 +1,8 @@
 package entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
         @Index(name = "idx_fk_film_id", columnList = "film_id"),
         @Index(name = "idx_store_id_film_id", columnList = "store_id, film_id")
 })
+@Getter
+@Setter
 public class Inventory {
     @Id
     @Column(name = "inventory_id", nullable = false)
@@ -28,37 +32,5 @@ public class Inventory {
     @Column(name = "last_update", nullable = false)
     @UpdateTimestamp
     private LocalDateTime lastUpdate;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Film getFilm() {
-        return film;
-    }
-
-    public void setFilm(Film film) {
-        this.film = film;
-    }
-
-    public entity.Store getStore() {
-        return store;
-    }
-
-    public void setStore(entity.Store store) {
-        this.store = store;
-    }
-
-    public LocalDateTime getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(LocalDateTime lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
 
 }

@@ -1,5 +1,8 @@
 package entity;
 
+import lombok.Getter;
+
+@Getter
 public enum Rating {
     G("G"),
     PG("PG"),
@@ -7,9 +10,10 @@ public enum Rating {
     R("R"),
     NC17("NC-17");
 
-    private String value;
+    private final String value;
 
     Rating(String value) {
         this.value = value;
     }
+
 }

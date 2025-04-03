@@ -1,22 +1,22 @@
 package entity;
 
+import dao.RatingConverter;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Type;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.Year;
+
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "film", schema = "movie", indexes = {
-        @Index(name = "idx_title", columnList = "title"),
-        @Index(name = "idx_fk_language_id", columnList = "language_id"),
-        @Index(name = "idx_fk_original_language_id", columnList = "original_language_id")
-})
+@Table(name = "film", schema = "movie")
+@Getter
+@Setter
 public class Film {
     @Id
     @Column(name = "film_id")
@@ -27,13 +27,12 @@ public class Film {
     private String title;
 
     @Column(name = "description", columnDefinition = "text")
-    @Type(type = "text")
     private String description;
 
     @Column(name = "release_year", columnDefinition = "year")
-    private Year releaseYear;
+    private Integer releaseYear;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "language_id")
     private Language language;
 
@@ -53,7 +52,8 @@ public class Film {
     @Column(name = "replacement_cost", nullable = false, precision = 5, scale = 2)
     private BigDecimal replacementCost;
 
-    @Column(name = "rating", columnDefinition = "enum('G', 'PG', 'PG-13', 'R', 'NC-17')")
+    @Column(columnDefinition = "enum('G', 'PG', 'PG-13', 'R', 'NC-17')")
+    @Convert(converter = RatingConverter.class)
     private Rating rating;
 
     @Column(name = "special_features", columnDefinition = "set('Trailers', 'Commentaries', 'Deleted Scenes', 'Behind the Scenes')")
@@ -79,100 +79,11 @@ public class Film {
     )
     private Set<Actor> actors = new HashSet<>();
 
-    public String getTitle() {
-        return title;
-    }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Year getReleaseYear() {
-        return releaseYear;
-    }
-
-    public void setReleaseYear(Year releaseYear) {
-        this.releaseYear = releaseYear;
-    }
-
-    public Language getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(Language language) {
-        this.language = language;
-    }
-
-    public Language getOriginalLanguage() {
-        return originalLanguage;
-    }
-
-    public void setOriginalLanguage(Language originalLanguage) {
-        this.originalLanguage = originalLanguage;
-    }
-
-    public Byte getRentalDuration() {
-        return rentalDuration;
-    }
-
-    public void setRentalDuration(Byte rentalDuration) {
-        this.rentalDuration = rentalDuration;
-    }
-
-    public BigDecimal getRentalRate() {
-        return rentalRate;
-    }
-
-    public void setRentalRate(BigDecimal rentalRate) {
-        this.rentalRate = rentalRate;
-    }
-
-    public Short getLength() {
-        return length;
-    }
-
-    public void setLength(Short length) {
-        this.length = length;
-    }
-
-    public BigDecimal getReplacementCost() {
-        return replacementCost;
-    }
-
-    public void setReplacementCost(BigDecimal replacementCost) {
-        this.replacementCost = replacementCost;
-    }
-
-    public Rating getRating() {
-        return rating;
-    }
-
-    public void setRating(String rating) {
-        this.rating = Rating.valueOf(rating);
-    }
-
-    public String getSpecialFeatures() {
-        return specialFeatures;
-    }
-
-    public void setSpecialFeatures(String specialFeatures) {
-        this.specialFeatures = specialFeatures;
-    }
-
-    public LocalDateTime getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(LocalDateTime lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    public void setSpecialFeaturesFromEnumSet(Set<Feature> features) {
+        this.specialFeatures = features.stream()
+                .map(Enum::name)
+                .collect(Collectors.joining(","));
     }
 
 }
